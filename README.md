@@ -8,42 +8,37 @@ A comprehensive password strength checking and generation tool that helps users 
   - Length and character variety
   - Common patterns and dictionary words
   - Entropy calculation
-  - Estimated time to crack
-  - Personal information detection
-
-- **Password Generation**: Creates strong, random passwords with customizable options
-  - Adjustable length (8-50 characters)
-  - Include/exclude character types (uppercase, lowercase, numbers, symbols)
-  - Copy to clipboard functionality
-
-- **Security Features**
-  - Client-side analysis for instant feedback
-  - Server-side validation for additional security checks
-  - Rate limiting to prevent abuse
-  - No password storage or logging
 
 ## Tech Stack
 
-- **Frontend**: React, Material-UI
-- **Backend**: Node.js, Express
-- **Libraries**:
-  - zxcvbn: For password strength estimation
-  - password-validator: For rule-based validation
-  - crypto: For secure random number generation
+- **Frontend**:
+  - React 18
+  - Material-UI 5
+  - Axios for API calls
+  - zxcvbn for client-side password strength estimation
+
+- **Backend**:
+  - Node.js
+  - Express.js
+  - zxcvbn for password strength analysis
+  - password-validator for rule-based validation
+  - crypto for secure random number generation
+  - Helmet for security headers
+  - CORS for cross-origin requests
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm (v6 or higher) or yarn
+- Node.js (v16 or higher recommended)
+- npm (v8 or higher) or yarn
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/password-strength-checker.git
-   cd password-strength-checker
+   git clone https://github.com/doruksucuka/secure-password-meter.git
+   cd secure-password-meter
    ```
 
 2. Install server dependencies:
@@ -60,13 +55,13 @@ A comprehensive password strength checking and generation tool that helps users 
 
 ### Running the Application
 
-1. Start the development server:
+1. Start the development server (from the root directory):
    ```bash
-   # From the root directory
    npm run dev
    ```
-
-   This will start both the backend server (on port 5000) and the frontend development server (on port 3000).
+   This will start:
+   - Backend server (default: http://localhost:5000, will find next available port if needed)
+   - Frontend development server (http://localhost:3000)
 
 2. Open [http://localhost:3000](http://localhost:3000) in your browser to access the application.
 
@@ -78,7 +73,7 @@ A comprehensive password strength checking and generation tool that helps users 
 POST /api/check-password
 ```
 
-**Request Body:**
+**Request body:**
 ```json
 {
   "password": "your-password-here"
@@ -88,50 +83,53 @@ POST /api/check-password
 **Response:**
 ```json
 {
-  "score": 4,
+  "score": 3,
   "feedback": {
-    "warning": "",
-    "suggestions": []
+    "suggestions": ["Add another word or two. Uncommon words are better."],
+    "warning": ""
   },
-  "suggestions": [],
-  "crackTime": "centuries",
-  "isCommon": false,
-  "isStrong": true,
-  "validationDetails": [],
-  "entropy": 123.45,
-  "strength": "Very Strong"
+  "crackTime": 3600000,
+  "crackTimeDisplay": "months",
+  "entropy": 65.4
 }
 ```
 
 ### Generate Password
 
 ```
-GET /api/generate-password?length=16&symbols=true&numbers=true&uppercase=true&lowercase=true
+GET /api/generate-password?length=16&uppercase=true&lowercase=true&numbers=true&symbols=true
 ```
 
-**Query Parameters:**
-- `length`: Number (8-50, default: 16)
-- `symbols`: Boolean (default: true)
-- `numbers`: Boolean (default: true)
-- `uppercase`: Boolean (default: true)
-- `lowercase`: Boolean (default: true)
+**Query parameters:**
+- `length`: Length of the password (default: 16, min: 8, max: 128)
+- `uppercase`: Include uppercase letters (A-Z)
+- `lowercase`: Include lowercase letters (a-z)
+- `numbers`: Include numbers (0-9)
+- `symbols`: Include symbols (!@#$%^&*()_+{}[]|:;"'<>,.?/~`)
 
 **Response:**
 ```json
 {
-  "password": "dK7#mN9@pQ2$vR5&"
+  "password": "xQ7#k9!pL2$vR5&"
 }
 ```
+
+## Password Strength Criteria
+
+The application checks passwords against these criteria:
+
+- At least 12 characters long
+- Includes both uppercase and lowercase letters
+- Includes numbers and symbols
+- Not based on common words or patterns
+- High entropy for better security
 
 ## Security Considerations
 
 - Passwords are never stored or logged
-- All password processing happens in memory
-- Rate limiting is implemented to prevent brute force attacks
-- HTTPS should be used in production
-- Client-side validation is provided for immediate feedback, but server-side validation is the source of truth
-
-## Contributing
+- All API requests are rate-limited
+- Secure headers are enabled
+- Client-side validation is supplemented with server-side validation
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
